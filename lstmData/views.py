@@ -6,6 +6,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .lstmModelDriver.driver import Driver
+from .lstmModelDriver.config import Configurations
+
 
 
 @api_view(['GET', 'POST'])
@@ -30,8 +32,15 @@ def lstmData_detail(request, id, format=None):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
+
+        stock_symbol = request.query_params.get('symbol', 'default_symbol')  # Set a default symbol or handle None
+        configs = Configurations.get_configs(stock_symbol)
+
+        p = Driver.get_price(configs)
+
         serializer = lstmDataSerializer(ldata)
         return Response(serializer.data)
+    
     elif request.method == 'POST':
         serializer = lstmDataSerializer(ldata, data=request.data)
         if serializer.is_valid():
@@ -42,4 +51,7 @@ def lstmData_detail(request, id, format=None):
     elif request.method == 'DELETE':
         lstmData.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
+updatedConfigs = Configurations.get_configs("IBM")    
+x = Driver.get_price(updatedConfigs)
+print(x)

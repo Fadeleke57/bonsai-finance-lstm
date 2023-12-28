@@ -3,20 +3,25 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 
-from .config import configs
 from .download_data import download_data
 from .data_normalization import Normalizer
 from .data_prep import prepare_data_x, prepare_data_y
 from .download_data_pytorch import TimeSeriesDataset
 
-from .epoch import *
+from .epoch import Epoch
 
 print("All dependencies installed")
 
 class Driver:
+        
     # batta bing batta boom
-    def get_price():
+    def get_price(updatedConfigs):
 
+        # get lstm configurations based on inputted stock
+        configs = updatedConfigs
+
+        e = Epoch(configs)
+        
         data_close_price = download_data(configs)[1]
 
         # Normalize
@@ -54,9 +59,9 @@ class Driver:
         val_dataloader = DataLoader(dataset_val, batch_size=configs["training"]["batch_size"], shuffle=True)
 
         for epoch in range(configs["training"]["num_epoch"]):
-            loss_train, lr_train = run_epoch(train_dataloader, is_training=True)
-            loss_val, lr_val = run_epoch(val_dataloader)
-            scheduler.step()
+            loss_train, lr_train = e.run_epoch(train_dataloader, is_training=True)
+            loss_val, lr_val = e.run_epoch(val_dataloader)
+            e.scheduler.step()
             
             print('Epoch[{}/{}] | loss train:{:.6f}, test:{:.6f} | lr:{:.6f}'
                     .format(epoch + 1, configs["training"]["num_epoch"], loss_train, loss_val, lr_train))
@@ -67,7 +72,7 @@ class Driver:
         train_dataloader = DataLoader(dataset_train, batch_size=configs["training"]["batch_size"], shuffle=False)
         val_dataloader = DataLoader(dataset_val, batch_size=configs["training"]["batch_size"], shuffle=False)
 
-        model.eval()
+        e.model.eval()
 
         # predict on the training data, to see how well the model managed to learn and memorize
 
@@ -75,7 +80,7 @@ class Driver:
 
         for idx, (x, y) in enumerate(train_dataloader):
             x = x.to(configs["training"]["device"])
-            out = model(x)
+            out = e.model(x)
             out = out.cpu().detach().numpy()
             predicted_train = np.concatenate((predicted_train, out))
 
@@ -85,16 +90,16 @@ class Driver:
 
         for idx, (x, y) in enumerate(val_dataloader):
             x = x.to(configs["training"]["device"])
-            out = model(x)
+            out = e.model(x)
             out = out.cpu().detach().numpy()
             predicted_val = np.concatenate((predicted_val, out))
 
         # predict the closing price of the next trading day
 
-        model.eval()
+        e.model.eval()
 
         x = torch.tensor(data_x_unseen).float().to(configs["training"]["device"]).unsqueeze(0).unsqueeze(2) # this is the data type and shape required, [batch, sequence, feature]
-        prediction = model(x)
+        prediction = e.model(x)
         prediction = prediction.cpu().detach().numpy()
 
         plot_range = 10
