@@ -16,11 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from lstmData import views
 import debug_toolbar
+from rest_framework.urlpatterns import format_suffix_patterns
 
 # playground/hello
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('playground/', include('playground.urls')),
-    path('__debug__/', include(debug_toolbar.urls))
+    path('__debug__/', include(debug_toolbar.urls)),
+    path('lstmData/', views.lstmData_list ),
+    path('lstmData/<int:id>', views.lstmData_detail)
 ]
+
+urlpatterns = format_suffix_patterns(urlpatterns)

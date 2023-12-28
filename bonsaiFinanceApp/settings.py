@@ -36,12 +36,13 @@ INTERNAL_IPS = [
 ]
 
 INSTALLED_APPS = [
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'playground',
+    'django.contrib.sessions',
     'debug_toolbar',
     'lstmData'
 ]
