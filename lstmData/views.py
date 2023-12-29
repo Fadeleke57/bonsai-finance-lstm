@@ -56,21 +56,32 @@ class StockPrediction:
       
 @api_view(['GET'])      
 def lstmData_detail(request, ticker, format=None):
-    configs = Configurations.get_configs(ticker)
-    predictedPrice = Driver.get_price(configs)
+    try:
+        configs = Configurations.get_configs(ticker)
+        predictedPrice = Driver.get_price(configs)
 
-    # Create an instance of StockPrediction
-    prediction = StockPrediction(ticker, predictedPrice)
+        if predictedPrice is None:
+            raise ValueError("Failed to predict price for the given ticker.")
 
-    # Prepare the JSON response
-    return Response({
-        "status": "success",
-        "data": prediction.to_json(),
-        "message": f"Next day stock price prediction for {ticker.upper()}"
-    })
-    
+        # Create an instance of StockPrediction
+        prediction = StockPrediction(ticker, predictedPrice)
 
+        # Prepare the JSON response
+        return Response({
+            "Response": {
+                "status": "success",
+                "data": prediction.to_json(),
+                "message": f"Next day stock price prediction for {ticker.upper()}"
+            }
+        })
 
+    except Exception as e:
+        return Response({
+            "Response": {
+                "status": "error",
+                "message": str(e) or "An error occurred while processing the request."
+            }  
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 """  
 elif request.method == 'PUT':
