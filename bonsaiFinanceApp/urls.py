@@ -24,8 +24,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('__debug__/', include(debug_toolbar.urls)),
-    path('lstmData/', views.lstmData_list ),
-    path('lstmData/<int:id>', views.lstmData_detail)
+    path('lstmData/<str:ticker>', views.lstmData_detail)
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

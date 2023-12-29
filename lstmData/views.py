@@ -1,57 +1,93 @@
+from django.utils import timezone
 from django.shortcuts import render
 from django.http import JsonResponse
-from .models import lstmData
-from .serializers import lstmDataSerializer
+
+#from .models import lstmData
+#from .serializers import lstmDataSerializer
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+
 from .lstmModelDriver.driver import Driver
 from .lstmModelDriver.config import Configurations
 
+from datetime import datetime
 
-
+'''
 @api_view(['GET', 'POST'])
 def lstmData_list(request, format = None):
 
     if request.method == 'GET':
         data_points = lstmData.objects.all()
         serializer = lstmDataSerializer(data_points, many=True)
-        return JsonResponse({"response_data": serializer.data})
+        return Response({
+            "status": "success",
+            "data": serializer.data,
+            "message": "List of stock predictions"
+        })
     
     if request.method == 'POST':
         serializer = lstmDataSerializer(data=request.data)
+
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response({
+                    "status": "success",
+                    "data": serializer.data,
+                    "message": "New stock prediction created"
+            }, status=status.HTTP_201_CREATED)
         
-@api_view(['GET', 'PUT','DELETE'])      
-def lstmData_detail(request, id, format=None):
-    try:
-        ldata = lstmData.objects.get(pk=id)
-    except lstmData.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+'''  
+class StockPrediction:
+    def __init__(self, stock_symbol, predicted_price):
+        self.stock_symbol = stock_symbol
+        self.predicted_price = predicted_price
+        self.prediction_date = datetime.now().date()
 
-    if request.method == 'GET':
+    def to_json(self):
+        return {
+            "stockSymbol": self.stock_symbol,
+            "predictedPrice": self.predicted_price,
+            "predictionDate": self.prediction_date.strftime('%Y-%m-%d')
+        }
+      
+@api_view(['GET'])      
+def lstmData_detail(request, ticker, format=None):
+    configs = Configurations.get_configs(ticker)
+    predictedPrice = Driver.get_price(configs)
 
-        stock_symbol = request.query_params.get('symbol', 'default_symbol')  # Set a default symbol or handle None
-        configs = Configurations.get_configs(stock_symbol)
+    # Create an instance of StockPrediction
+    prediction = StockPrediction(ticker, predictedPrice)
 
-        p = Driver.get_price(configs)
-
-        serializer = lstmDataSerializer(ldata)
-        return Response(serializer.data)
+    # Prepare the JSON response
+    return Response({
+        "status": "success",
+        "data": prediction.to_json(),
+        "message": f"Next day stock price prediction for {ticker.upper()}"
+    })
     
-    elif request.method == 'POST':
-        serializer = lstmDataSerializer(ldata, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    elif request.method == 'DELETE':
-        lstmData.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
-updatedConfigs = Configurations.get_configs("IBM")    
-x = Driver.get_price(updatedConfigs)
-print(x)
+
+
+"""  
+elif request.method == 'PUT':
+    serializer = lstmDataSerializer(ldata, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({
+            "status": "success",
+            "data": serializer.data,
+            "message": f"Stock prediction for {ldata.stockSymbol} updated"
+        })
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+elif request.method == 'DELETE':
+    lstmData.delete()
+    return Response({
+        "status": "success",
+        "message": "Stock prediction deleted"
+    }, status=status.HTTP_204_NO_CONTENT)
+"""      
