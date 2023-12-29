@@ -1,2 +1,2 @@
 # bonsai-finance-app
-In the works..
+serverless api that handles requests to the lstm model 
