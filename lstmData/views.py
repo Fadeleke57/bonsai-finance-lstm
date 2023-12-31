@@ -15,13 +15,13 @@ class StockPrediction:
     def __init__(self, stock_symbol, predicted_price):
         self.stock_symbol = stock_symbol
         self.predicted_price = predicted_price
-        self.prediction_date = datetime.now().date()
+        self.prediction_date = datetime.now()
 
     def to_json(self):
         return {
             "stockSymbol": self.stock_symbol,
             "predictedPrice": self.predicted_price,
-            "predictionDate": self.prediction_date.strftime('%Y-%m-%d')
+            "predictionDate": self.prediction_date.strftime('%m/%d/%Y %H:%M:%S')
         }
       
 @api_view(['GET'])      

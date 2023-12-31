@@ -3,7 +3,7 @@ from torch.utils.data import Dataset
 
 class TimeSeriesDataset(Dataset):
     def __init__(self, x, y):
-        x = np.expand_dims(x, 2) # in our case, we have only 1 feature, so we need to convert `x` into [batch, sequence, features] for LSTM
+        x = np.expand_dims(x, 2) # convert `x` into [batch, sequence, features] for LSTM
         self.x = x.astype(np.float32)
         self.y = y.astype(np.float32)
         

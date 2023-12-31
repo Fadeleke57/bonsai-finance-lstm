@@ -25,7 +25,7 @@ class Configurations:
                 "color_pred_test": "#FF4136",
             },
             "model": {
-                "input_size": 1, # since we are only using 1 feature, close price
+                "input_size": 1, # 1 feature; close price
                 "num_lstm_layers": 2,
                 "lstm_size": 32,
                 "dropout": 0.2,
