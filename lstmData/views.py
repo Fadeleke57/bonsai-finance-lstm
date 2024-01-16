@@ -30,10 +30,10 @@ def lstmData_detail(request, ticker, format=None):
         configs = Configurations.get_configs(ticker)
         predictedPrice = Driver.get_price(configs)
 
-        # creates an instance of StockPrediction
+        # prediction variable for instance of StockPrediction
         prediction = StockPrediction(ticker, predictedPrice)
 
-        # prepares the nested JSON response
+        # JSON response
         response_data = {
             "status": "success",
             "data": prediction.to_json(),
