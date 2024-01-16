@@ -1,4 +1,4 @@
-APIKEY = "2ET90HFDC43I9MY6"
+APIKEY = "2ET90HFDC43I9MY6" #ignore this lol
 #stockTicker = str(input("Enter a ticker to predict price: "))
 
 class Configurations:
