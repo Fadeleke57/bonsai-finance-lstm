@@ -1,2 +1,2 @@
 # bonsai-finance-app
-serverless api that handles requests to the lstm model - pending hosting
+serverless api that handles requests to the lstm model - pending hosting to aws
