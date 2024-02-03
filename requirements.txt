@@ -1,2 +1,6 @@
 djangorestframework
 django-debug-toolbar
+numpy
+torch
+alpha_vantage
+
