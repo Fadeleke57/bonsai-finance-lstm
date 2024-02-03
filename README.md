@@ -12,7 +12,7 @@ git clone https://github.com/Fadeleke57/bonsai-finance-app.git
 cd bonsai-finance-app
 ```
 
-Install Django Rest Framework and Django Depug Toolbar:
+Install Django Rest Framework, Django Depug Toolbar, and the dependencies for the model:
 ```
 pip install -r requirements.txt
 ```
