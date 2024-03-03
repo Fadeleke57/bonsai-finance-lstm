@@ -6,7 +6,7 @@ Python3<br>
 Django<br>
 
 ### Installation:
-First, clone this repository to your local machine:
+First, clone:
 ```
 git clone https://github.com/Fadeleke57/bonsai-finance-app.git
 cd bonsai-finance-app
