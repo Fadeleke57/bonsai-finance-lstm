@@ -1,5 +1,5 @@
 # REST API For Next Day Prices
-Bi-layer LSTM model, enabling next-day price forecasting and providing outputs in JSON format upon request. *Useability is restricted at the moment due to the size of pytorch's packages but a demonstration is provided below*. 
+Bi-layer LSTM model, enabling next-day price forecasting and providing outputs in JSON format upon request. *Can't be used at the moment due to the size of pytorch's packages but a demonstration is provided below*. 
 
 ### Prerequisites:
 Python3<br>
