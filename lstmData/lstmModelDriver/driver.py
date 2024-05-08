@@ -24,17 +24,17 @@ class Driver:
         
         data_close_price = download_data(configs)[1]
 
-        # normalize (see data_normalization.py)
+        # Normalize
 
         scaler = Normalizer()
         normalized_data_close_price = scaler.fit_transform(data_close_price)
 
-        # prepping data
+        # Prep data
 
         data_x, data_x_unseen = prepare_data_x(normalized_data_close_price, window_size=configs["data"]["window_size"])
         data_y = prepare_data_y(normalized_data_close_price, window_size=configs["data"]["window_size"])
 
-        # split dataset
+        # Split dataset
 
         split_index = int(data_y.shape[0]*configs["data"]["train_split_size"])
         data_x_train = data_x[:split_index]
@@ -67,7 +67,7 @@ class Driver:
                     .format(epoch + 1, configs["training"]["num_epoch"], loss_train, loss_val, lr_train))
             
 
-        # re-initialize dataloader so the data doesn't shuffled, to plot the values by date
+        # re-initialize dataloader so the data doesn't shuffled, so we can plot the values by date
 
         train_dataloader = DataLoader(dataset_train, batch_size=configs["training"]["batch_size"], shuffle=False)
         val_dataloader = DataLoader(dataset_val, batch_size=configs["training"]["batch_size"], shuffle=False)
