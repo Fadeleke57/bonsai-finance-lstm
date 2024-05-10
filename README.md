@@ -25,7 +25,7 @@ Run:
 python3 manage.py runserver
 ```
 In your browser, search...<br><br>
-127.0.0.1:8000/lstmData/{requested stock ticker}
+127.0.0.1:8000/lstmData/{requested stock ticker}?format=json
 
 ![Screenshot 2024-02-03 172129](https://github.com/Fadeleke57/bonsai-finance-app/assets/110058327/7a914a7a-71ad-4cb4-b2d4-55bd6657e203)
 ![Screenshot 2024-02-03 171820](https://github.com/Fadeleke57/bonsai-finance-app/assets/110058327/6c2876a0-c8d7-440d-b284-169d643c69ef)
