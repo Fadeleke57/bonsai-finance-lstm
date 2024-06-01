@@ -4,4 +4,5 @@ django-debug-toolbar
 numpy
 torch
 alpha_vantage
+gunicorn==22.0.0
 
